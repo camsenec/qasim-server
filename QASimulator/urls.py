@@ -16,9 +16,15 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from restapi.urls import router as restapi_router
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     #routerとして指定されているurl(QA_Simulator)
     path('', include(restapi_router.urls))
 ]
+
+#データファイルダウンロード用のURLを追加
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
