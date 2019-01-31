@@ -7,8 +7,9 @@ class SpinGlassFieldSerializer(serializers.ModelSerializer):
         model = SpinGlassField
         fields = ('name','trotter_num', 'site_num', 'result', 'data')
 
+'''
 class ManyItemsSerializer(serializers.Serializer):
 
     """ All 'Item' Model serialize. """
-    name = serializers.CharField()
     items = SpinGlassFieldSerializer(many=True, allow_null=True, default=SpinGlassField.objects.all())
+'''

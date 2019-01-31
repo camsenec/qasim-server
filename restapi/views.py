@@ -4,7 +4,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from rest_framework.decorators import list_route
 from rest_framework import status
 from .models import SpinGlassField
-from .serializer import ManyItemsSerializer
+from .serializer import SpinGlassFieldSerializer
 from qa_simulator.solver import ColoringProblemSolver
 from chainercv.datasets import voc_bbox_label_names
 import subprocess
@@ -12,13 +12,15 @@ import subprocess
 
 class SpinGlassFieldViewSet(viewsets.ModelViewSet):
     queryset = SpinGlassField.objects.all()
-    serializer_class = ManyItemsSerializer
+    serializer_class = SpinGlassFieldSerializer
 
     #http://<host_name>/qa_simulator/solve
     @list_route(methods=["post"])
     def solve(self, request):
+        #delete preveous file(for test)
         subproc_result = subprocess.run(["rm", "data/SG.dat"])
 
+        #read POST params
         name = request.POST["name"]
         trotter_num = request.POST["trotter_num"]
         site_num = request.POST["site_num"]
@@ -26,10 +28,10 @@ class SpinGlassFieldViewSet(viewsets.ModelViewSet):
         data = request.FILES["data"]
 
         # Delete the previous data ( for test )
-        pre_vm = SpinGlassField.objects.all()
-        pre_vm.delete()
+        pre = SpinGlassField.objects.all()
+        pre.delete()
 
-        #nameの重複に対するエラー処理
+        #error exception for multiple name in model
         if SpinGlassField.objects.filter(name = name).count()!=0:
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
@@ -41,16 +43,13 @@ class SpinGlassFieldViewSet(viewsets.ModelViewSet):
         simulator = ColoringProblemSolver(int(trotter_num),int(site_num))
         result = simulator.solve()
 
-        #result update
+        #model update based on the result
         spin_glass_field = SpinGlassField.objects.get(name = name)
         spin_glass_field.result = result
         spin_glass_field.save()
 
-        #make serializer
-        serializer = ManyItemsSerializer(data={"name":name})
+        #create serializer
+        spin_glass_field = SpinGlassField.objects.get(name = name)
+        serializer = self.get_serializer(spin_glass_field)
 
-        #response
-        if serializer.is_valid():
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serializer.data, status=status.HTTP_200_OK)
