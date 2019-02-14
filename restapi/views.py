@@ -18,7 +18,7 @@ class SpinGlassFieldViewSet(viewsets.ModelViewSet):
     @list_route(methods=["post"])
     def solve(self, request):
         #delete preveous file(for test)
-        subproc_result = subprocess.run(["rm", "data/SG.dat"])
+        subproc_result = subprocess.run(["rm", "data/SG.csv"])
 
         #read POST params
         name = request.POST["name"]
@@ -26,6 +26,10 @@ class SpinGlassFieldViewSet(viewsets.ModelViewSet):
         site_num = request.POST["site_num"]
         result = request.POST["result"]
         data = request.FILES["data"]
+        print(name)
+        print(trotter_num)
+        print(site_num)
+        print(result)
 
         # Delete the previous data ( for test )
         pre = SpinGlassField.objects.all()
