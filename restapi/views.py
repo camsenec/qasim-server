@@ -1,13 +1,19 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from django.contrib.sites.shortcuts import get_current_site
 from rest_framework.decorators import list_route
+from django.contrib.sites.shortcuts import get_current_site
 from rest_framework import status
 from .models import SpinGlassField
 from .serializer import SpinGlassFieldSerializer
 from qa_simulator.solver import ColoringProblemSolver
 from chainercv.datasets import voc_bbox_label_names
+from django.shortcuts import render
 import subprocess
+
+
+def manual(request):
+    context = {}
+    return render(request, 'manual.html', context)
 
 
 class SpinGlassFieldViewSet(viewsets.ModelViewSet):
@@ -26,10 +32,6 @@ class SpinGlassFieldViewSet(viewsets.ModelViewSet):
         site_num = request.POST["site_num"]
         result = request.POST["result"]
         data = request.FILES["data"]
-        print(name)
-        print(trotter_num)
-        print(site_num)
-        print(result)
 
         # Delete the previous data ( for test )
         pre = SpinGlassField.objects.all()
