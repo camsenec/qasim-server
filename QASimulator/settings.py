@@ -27,7 +27,7 @@ SECRET_KEY = '+au48@xojso1dw=scw47wgba#3_wt6xf20aqpp1=hz2i8qv#(9'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["54.95.61.149"]
 
 
 # Application definition
@@ -122,3 +122,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = '/home/app-user/QASimulator_ServerSide/static/'
