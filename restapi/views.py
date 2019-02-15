@@ -18,7 +18,7 @@ class SpinGlassFieldViewSet(viewsets.ModelViewSet):
     @list_route(methods=["post"])
     def solve(self, request):
         #delete preveous file(for test)
-        subproc_result = subprocess.run(["rm", "data/SG.dat"])
+        subproc_result = subprocess.run(["rm", "data/SG.csv"])
 
         #read POST params
         name = request.POST["name"]
