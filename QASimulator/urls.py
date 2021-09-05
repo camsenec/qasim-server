@@ -21,7 +21,6 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    #routerとして指定されているurl(QA_Simulator)
     path('', include(restapi_router.urls)),
     path('qa_simulator/', include('restapi.urls'))
 ]

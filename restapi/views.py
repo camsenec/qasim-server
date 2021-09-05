@@ -1,6 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.response import Response
-from rest_framework.decorators import list_route
+from rest_framework.decorators import action
 from django.contrib.sites.shortcuts import get_current_site
 from rest_framework import status
 from .models import SpinGlassField
@@ -21,7 +21,7 @@ class SpinGlassFieldViewSet(viewsets.ModelViewSet):
     serializer_class = SpinGlassFieldSerializer
 
     #http://<host_name>/qa_simulator/solve
-    @list_route(methods=["post"])
+    @action(detail=False, methods=["post"])
     def solve(self, request):
         #delete preveous file(for test)
         subproc_result = subprocess.run(["rm", "data/SG.csv"])
@@ -42,7 +42,7 @@ class SpinGlassFieldViewSet(viewsets.ModelViewSet):
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
         #register data to database
-        spin_glass_field = SpinGlassField(name=name,trotter_num=trotter_num, site_num=site_num,result=result, data=data)
+        spin_glass_field = SpinGlassField(name=name,trotter_num=trotter_num, site_num=site_num, result=result, data=data)
         spin_glass_field.save()
 
         #solve problem using qa_simulator
